@@ -108,12 +108,13 @@ public class Arvore_RubroNegra {
                     pai.setCor("black");
                     if(avo.getPai()!=null){ // teste se ele não é nó raiz
                         avo.setCor("red");
+                        if(avo.getPai().getCor()=="red"){
+                            rebalancearInsercao(avo);
+                        }
                     }
                 } else { // Se o tio for black OU null, que também se considera black
                     if(pai.getFilho_Direito() == inserido){
-                        rotacaoSimplesEsquerda();
-                    }else{
-                        rotacaoDuplaEsquerda();
+                        rotacaoSimplesEsquerda(inserido);
                     }
                 }
                 
@@ -125,12 +126,15 @@ public class Arvore_RubroNegra {
                     pai.setCor("black");
                     if (avo.getPai() != null) {
                         avo.setCor("red");
+                        if(avo.getPai().getCor()=="red"){
+                            rebalancearInsercao(avo);
+                        }
                     }
                 } else { // Se o tio for black
                     if (pai.getFilho_Esquerdo() == inserido) {
-                        rotacaoSimplesDireita();
+                        rotacaoSimplesDireita(inserido);
                     } else {
-                        rotacaoDuplaDireita();
+                        rotacaoDuplaDireita(inserido);
                     }
                 }
             }
@@ -142,29 +146,93 @@ public class Arvore_RubroNegra {
         
     }
     
-    private void rotacaoSimplesDireita(){
-        out.println("rotação simples direita");
+    private void rotacaoSimplesDireita(No inserido){ // Caso 3a da inserção
+        //out.println("rotação simples direita");
+        No avo = inserido.getPai().getPai();
+        
+        
+        avo.setFilho_Esquerdo(inserido.getPai().getFilho_Direito());
+        if(inserido.getPai().getFilho_Direito() != nil){
+            inserido.getPai().getFilho_Direito().setPai(avo);
+        }
+        inserido.getPai().setFilho_Direito(avo);
+        
+        if(avo.getPai() != null){
+            inserido.getPai().setPai(avo.getPai());
+            avo.getPai().setFilho_Esquerdo(inserido.getPai());
+        } else {
+            inserido.getPai().setPai(avo.getPai());
+            noRaiz = inserido.getPai();
+        }
+        
+        avo.setPai(inserido.getPai());
+        
+        avo.setCor("red");
+        inserido.getPai().setCor("black");
     }
     
-    private void rotacaoSimplesEsquerda(){
-        out.println("rotação simples esquerda");
+    private void rotacaoSimplesEsquerda(No inserido){ // Caso 3b da inseção
+        //out.println("rotação simples esquerda");
+        No avo = inserido.getPai().getPai();
+        
+        avo.setFilho_Direito(inserido.getPai().getFilho_Esquerdo());
+        if(inserido.getPai().getFilho_Esquerdo() != nil){
+            inserido.getPai().getFilho_Esquerdo().setPai(avo);
+        }
+        inserido.getPai().setFilho_Esquerdo(avo);
+        
+        
+        if(avo.getPai() != null){
+            inserido.getPai().setPai(avo.getPai());
+            avo.getPai().setFilho_Direito(inserido.getPai());
+        } else {
+            inserido.getPai().setPai(avo.getPai());
+            noRaiz = inserido.getPai();
+        }
+        
+        avo.setPai(inserido.getPai());
+        
+        avo.setCor("red");
+        inserido.getPai().setCor("black");
     }
     
-    private void rotacaoDuplaDireita(){
-        out.println("rotação dupla direita");
+    private void rotacaoDuplaDireita(No inserido){ // Caso 3d da inserção
+        //out.println("rotação dupla direita");
+        
+        No pai = inserido.getPai();
+        No avo = pai.getPai();
+        
+        pai.setPai(inserido);
+        inserido.setPai(avo);
+        inserido.setFilho_Esquerdo(pai);
+        avo.setFilho_Esquerdo(inserido);
+        pai.setFilho_Direito(nil);
+        
+        rotacaoSimplesDireita(pai);
     }
     
-    private void rotacaoDuplaEsquerda(){
-        out.println("rotação dupla esquerda");
+    private void rotacaoDuplaEsquerda(No inserido){ // Caso 3c da inserção
+        //out.println("rotação dupla esquerda");
+        
+        No pai = inserido.getPai();
+        No avo = pai.getPai();
+        
+        pai.setPai(inserido);
+        inserido.setPai(avo);
+        inserido.setFilho_Direito(pai);
+        avo.setFilho_Direito(inserido);
+        pai.setFilho_Esquerdo(nil);
+        
+        rotacaoSimplesEsquerda(pai);
     }
 
     public static void emOrdem(No raiz) {
         if(raiz != null) {
-//            if (raiz.getChave() != -1) { // ignore a impressão de nós nulos
+            if (raiz.getChave() != -1) { // ignore a impressão de nós nulos
                 emOrdem(raiz.getFilho_Esquerdo());
                 out.print(raiz.toString());
                 emOrdem(raiz.getFilho_Direito());
-  //          }
+            }
             
         }
     }
@@ -172,16 +240,47 @@ public class Arvore_RubroNegra {
     public static void main(String[] args) {
         Arvore_RubroNegra aRN = new Arvore_RubroNegra();
         
-        aRN.inserir(aRN.getRaiz(), 1);
-        aRN.inserir(aRN.getRaiz(), 2);
-        aRN.inserir(aRN.getRaiz(), 3);
+        // teste CASO 2 INSERÇÃO
         
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 13);
+        aRN.inserir(aRN.getRaiz(), 53);
+        aRN.inserir(aRN.getRaiz(), 8);
+        aRN.inserir(aRN.getRaiz(), 23);
+        aRN.inserir(aRN.getRaiz(), 43);
+        aRN.inserir(aRN.getRaiz(), 83);
+        aRN.inserir(aRN.getRaiz(), 63);
+        aRN.inserir(aRN.getRaiz(), 93);
+        aRN.inserir(aRN.getRaiz(), 96);
+        aRN.inserir(aRN.getRaiz(), 7);
+        aRN.inserir(aRN.getRaiz(), 100);
+        aRN.inserir(aRN.getRaiz(), 6);*/
+        
+        // teste CASO 3 INSERÇÃO
+        
+        // teste rotação a esquerda
+        /*aRN.inserir(aRN.getRaiz(), 1);
+        aRN.inserir(aRN.getRaiz(), 2);
+        aRN.inserir(aRN.getRaiz(), 3);*/
+        
+        
+        // teste rotação a direita
+        /*aRN.inserir(aRN.getRaiz(), 3);
+        aRN.inserir(aRN.getRaiz(), 2);
+        aRN.inserir(aRN.getRaiz(), 1);*/
+        
+        // teste rotação dupla a direita
+        /*aRN.inserir(aRN.getRaiz(), 4);
+        aRN.inserir(aRN.getRaiz(), 2);
+        aRN.inserir(aRN.getRaiz(), 3);*/
+        
+        // teste rotação dupla a esquerda
+        /*aRN.inserir(aRN.getRaiz(), 3);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 4);/*/
+        
+        out.println(aRN.getRaiz());
         emOrdem(aRN.getRaiz());
                 
-    }
-    
-
-
-    
-    
+    }   
 }

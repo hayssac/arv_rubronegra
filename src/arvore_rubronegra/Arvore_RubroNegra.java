@@ -115,6 +115,8 @@ public class Arvore_RubroNegra {
                 } else { // Se o tio for black OU null, que também se considera black
                     if(pai.getFilho_Direito() == inserido){
                         rotacaoSimplesEsquerda(inserido);
+                    }else{
+                        rotacaoDuplaEsquerda(inserido);
                     }
                 }
                 
@@ -159,7 +161,12 @@ public class Arvore_RubroNegra {
         
         if(avo.getPai() != null){
             inserido.getPai().setPai(avo.getPai());
-            avo.getPai().setFilho_Esquerdo(inserido.getPai());
+            if(avo.getPai().getFilho_Direito()==avo){
+               avo.getPai().setFilho_Direito(inserido.getPai()); 
+            }else{
+                avo.getPai().setFilho_Esquerdo(inserido.getPai());
+            }
+            
         } else {
             inserido.getPai().setPai(avo.getPai());
             noRaiz = inserido.getPai();
@@ -184,7 +191,11 @@ public class Arvore_RubroNegra {
         
         if(avo.getPai() != null){
             inserido.getPai().setPai(avo.getPai());
-            avo.getPai().setFilho_Direito(inserido.getPai());
+            if(avo.getPai().getFilho_Direito()==avo){
+               avo.getPai().setFilho_Direito(inserido.getPai()); 
+            }else{
+                avo.getPai().setFilho_Esquerdo(inserido.getPai());
+            }
         } else {
             inserido.getPai().setPai(avo.getPai());
             noRaiz = inserido.getPai();
@@ -220,6 +231,7 @@ public class Arvore_RubroNegra {
         pai.setPai(inserido);
         inserido.setPai(avo);
         inserido.setFilho_Direito(pai);
+        
         avo.setFilho_Direito(inserido);
         pai.setFilho_Esquerdo(nil);
         
@@ -240,44 +252,129 @@ public class Arvore_RubroNegra {
     public static void main(String[] args) {
         Arvore_RubroNegra aRN = new Arvore_RubroNegra();
         
-        // teste CASO 2 INSERÇÃO
+        // TESTES DO PROFESSOR
         
-        /*aRN.inserir(aRN.getRaiz(), 30);
-        aRN.inserir(aRN.getRaiz(), 13);
-        aRN.inserir(aRN.getRaiz(), 53);
-        aRN.inserir(aRN.getRaiz(), 8);
-        aRN.inserir(aRN.getRaiz(), 23);
-        aRN.inserir(aRN.getRaiz(), 43);
-        aRN.inserir(aRN.getRaiz(), 83);
-        aRN.inserir(aRN.getRaiz(), 63);
-        aRN.inserir(aRN.getRaiz(), 93);
-        aRN.inserir(aRN.getRaiz(), 96);
-        aRN.inserir(aRN.getRaiz(), 7);
-        aRN.inserir(aRN.getRaiz(), 100);
-        aRN.inserir(aRN.getRaiz(), 6);*/
+        // teste 1
+        /*aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 15);
+        aRN.inserir(aRN.getRaiz(), 20);*/    
         
-        // teste CASO 3 INSERÇÃO
+        // teste 2
+        /*aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 15);
+        aRN.inserir(aRN.getRaiz(), 1);  */
         
-        // teste rotação a esquerda
+        // teste 3
+        /*aRN.inserir(aRN.getRaiz(),20);
+        aRN.inserir(aRN.getRaiz(),10);
+        aRN.inserir(aRN.getRaiz(),30);
+        aRN.inserir(aRN.getRaiz(),5);
+        aRN.inserir(aRN.getRaiz(),50);
+        aRN.inserir(aRN.getRaiz(),15);
+        aRN.inserir(aRN.getRaiz(),25);
+        aRN.inserir(aRN.getRaiz(),1);
+        aRN.inserir(aRN.getRaiz(),60);
+        aRN.inserir(aRN.getRaiz(),45);
+        aRN.inserir(aRN.getRaiz(),70);*/
+        
+        //teste 4
+        /*aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 15);
+        aRN.inserir(aRN.getRaiz(), 25);
+        aRN.inserir(aRN.getRaiz(), 2);
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.inserir(aRN.getRaiz(), 45);
+        aRN.inserir(aRN.getRaiz(), 70);
+        aRN.inserir(aRN.getRaiz(), 1);
+        aRN.inserir(aRN.getRaiz(), 80);*/
+        
+        // teste 5 e 6
         /*aRN.inserir(aRN.getRaiz(), 1);
         aRN.inserir(aRN.getRaiz(), 2);
         aRN.inserir(aRN.getRaiz(), 3);*/
         
-        
-        // teste rotação a direita
-        /*aRN.inserir(aRN.getRaiz(), 3);
-        aRN.inserir(aRN.getRaiz(), 2);
-        aRN.inserir(aRN.getRaiz(), 1);*/
-        
-        // teste rotação dupla a direita
-        /*aRN.inserir(aRN.getRaiz(), 4);
-        aRN.inserir(aRN.getRaiz(), 2);
-        aRN.inserir(aRN.getRaiz(), 3);*/
-        
-        // teste rotação dupla a esquerda
-        /*aRN.inserir(aRN.getRaiz(), 3);
+        // teste 7
+        /*aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 30);
         aRN.inserir(aRN.getRaiz(), 5);
-        aRN.inserir(aRN.getRaiz(), 4);/*/
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 15);
+        aRN.inserir(aRN.getRaiz(), 25);
+        aRN.inserir(aRN.getRaiz(), 1);
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.inserir(aRN.getRaiz(), 45);
+        aRN.inserir(aRN.getRaiz(), 70);
+        aRN.inserir(aRN.getRaiz(), 80);*/
+        
+        // teste 8
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 30);*/
+        
+        //teste 9
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 51);*/
+        
+        // teste 10
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 35);*/
+        
+        // teste 11
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 25);*/
+        
+        //teste 12
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 70);
+        aRN.inserir(aRN.getRaiz(), 60);*/
+        
+        // teste 13
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 45);*/
+        
+        // teste 14
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 35);*/
+        
+        // teste 15
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 70);
+        aRN.inserir(aRN.getRaiz(), 75);*/
+        
+        // teste 16
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 25);*/
+        
+        // teste 17
+        /*aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.inserir(aRN.getRaiz(), 90);
+        aRN.inserir(aRN.getRaiz(), 85);*/
+        
         
         out.println(aRN.getRaiz());
         emOrdem(aRN.getRaiz());

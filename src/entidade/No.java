@@ -15,7 +15,7 @@ public class No {
     private No filho_Esquerdo;
     private No filho_Direito;
     private String cor;
-    private boolean duplo;
+    private boolean duplo = false;
 
     public int getChave() {
         return chave;
@@ -56,7 +56,7 @@ public class No {
     public void setCor(String cor) {
         this.cor = cor;
     }
-
+    
     public boolean isDuplo() {
         return duplo;
     }
@@ -67,7 +67,7 @@ public class No {
     
     @Override
     public String toString() {
-        return chave + " " + cor; 
+        return chave + ":" + cor + " "; 
     
     }    
     

@@ -238,53 +238,114 @@ public class Arvore_RubroNegra {
         
         //out.println(no.getChave());
         
-        if(no.getChave() != chave){
+        if(no.getChave() != chave){ // chave não for encontrada.
             if(no.getChave() < chave){
                 remover(no.getFilho_Direito(), chave);
-            } else {
+            } else if(no.getChave() >= chave){
                 remover(no.getFilho_Esquerdo(), chave);
+            } else {
+                out.println("Não encontrado nenhum nó com a chave no valor de "+ chave);
             }
         } else { // ENCONTROU O NÓ A SER REMOVIDO
-            if(no.getFilho_Direito() == nil){
-                if(no.getFilho_Esquerdo() == nil){
+            if(no.getFilho_Direito() == nil){ // Nó a ser removido não tem filho direito
+                if(no.getFilho_Esquerdo() == nil){ // Nó a ser removido não tem filho esquerdo
+                    // Nó FOOOLLLLHHHHAAA
                     if(no.getCor()=="red"){
-                        if(no.getPai().getFilho_Direito()==no){
+                        if(no.getPai().getFilho_Direito()==no){ // removido é filho direito
                             no.getPai().setFilho_Direito(nil);
-                        } else {
+                        } else { // removido é filho ESQUERDO
                             no.getPai().setFilho_Esquerdo(nil);
                         }
-                    }else{
-                        nil.setDuplo(true);
+                    }else{ //NÓ é folha e NEGRO
+                        if(no.getPai().getFilho_Direito()==no){ // removido é filho direito
+                            no.getPai().setFilho_Direito(nil);
+                        } else { // removido é filho ESQUERDO
+                            no.getPai().setFilho_Esquerdo(nil);
+                        }
+                        nil.setPai(no.getPai());
                         situacao3(no, nil);
                     }
-                } else { // nó só tem filho esquerdo.
+                } else { // NÓ só tem filho ESQUERDO.
                     if(no.getCor() == "red" && no.getFilho_Esquerdo().getCor() == "red"){
-                        situacao1(no, no.getFilho_Esquerdo());
+                        /*situacao1(no, no.getFilho_Esquerdo());
+                        no.setChave(no.getFilho_Esquerdo().getChave());
+                        no.setFilho_Esquerdo(nil);*/
+                        out.println("entrou no filho esquerdo direto sendo substituto");
                     }else if(no.getCor() == "black" && no.getFilho_Esquerdo().getCor() == "red"){
-                        situacao2(no, no.getFilho_Esquerdo());
+                        No pai = no.getPai();
+                        if(pai.getFilho_Direito()==no){ // removido é filho direito
+                            pai.setFilho_Direito(no.getFilho_Esquerdo());
+                        } else { // removido é filho ESQUERDO
+                            pai.setFilho_Esquerdo(no.getFilho_Esquerdo());
+                        }
+                        
+                        no.getFilho_Esquerdo().setPai(pai);
+                        
+                        situacao2(null, no.getFilho_Esquerdo());
                     } else if(no.getCor() == "black" && no.getFilho_Esquerdo().getCor() == "black"){
-                        no.getFilho_Esquerdo().setDuplo(true);
+                        No pai = no.getPai();
+                        if(pai.getFilho_Direito()==no){ // removido é filho direito
+                            pai.setFilho_Direito(no.getFilho_Esquerdo());
+                        } else { // removido é filho ESQUERDO
+                            pai.setFilho_Esquerdo(no.getFilho_Esquerdo());
+                        }
+                        
+                        no.getFilho_Esquerdo().setPai(pai);
                         situacao3(no, no.getFilho_Esquerdo());
                     } else {
-                        situacao4(no, no.getFilho_Esquerdo());
+                        No pai = no.getPai();
+                        if(pai.getFilho_Direito()==no){ // removido é filho direito
+                            pai.setFilho_Direito(no.getFilho_Esquerdo());
+                        } else { // removido é filho ESQUERDO
+                            pai.setFilho_Esquerdo(no.getFilho_Esquerdo());
+                        }
+                            
+                        no.getFilho_Esquerdo().setPai(pai);
+                        no.getFilho_Esquerdo().setDuplo(true);
+                        situacao4(null, no.getFilho_Esquerdo());
                     }
                 }
             } else {
-                No filhoDireito = no.getFilho_Direito();
+                No sucessor = no.getFilho_Direito();
             
-                while(filhoDireito.getFilho_Esquerdo()!=nil){
-                    filhoDireito = filhoDireito.getFilho_Esquerdo();
+                while(sucessor.getFilho_Esquerdo()!=nil){
+                    sucessor = sucessor.getFilho_Esquerdo();
                 }
                 
-                if(no.getCor() == "red" && filhoDireito.getCor() == "red"){
-                    situacao1(no, filhoDireito);
-                }else if(no.getCor() == "black" && filhoDireito.getCor() == "red"){
-                    situacao2(no, filhoDireito);
-                } else if(no.getCor() == "black" && filhoDireito.getCor() == "black"){
-                    filhoDireito.setDuplo(true);
-                    situacao3(no, filhoDireito);
+                if(no.getCor() == "red" && sucessor.getCor() == "red"){
+                    
+                    situacao1(no, sucessor);
+                }else if(no.getCor() == "black" && sucessor.getCor() == "red"){
+                    situacao2(no, sucessor);
+                } else if(no.getCor() == "black" && sucessor.getCor() == "black"){
+                    
+//                    No pai = no.getPai();
+//                    No paiDeSucessor = sucessor.getPai();
+//                    
+//                    if (no.getPai() == null) {
+//                        noRaiz = sucessor;
+//                    }
+//                    sucessor.setPai(pai);
+//                    
+//                    if(pai.getFilho_Direito()==no){ // removido é filho direito
+//                        pai.setFilho_Direito(sucessor);
+//                    } else { // removido é filho ESQUERDO
+//                        pai.setFilho_Esquerdo(sucessor);
+//                    }
+//                    
+//                    sucessor.setFilho_Esquerdo(no.getFilho_Esquerdo());
+//                    sucessor.setFilho_Direito(no.getFilho_Direito());
+//                    no.getFilho_Esquerdo().setPai(sucessor);
+//                    no.getFilho_Direito().setPai(sucessor);
+//                    
+//                    if (sucessor.getFilho_Direito() == paiDeSucessor) {
+//                        paiDeSucessor.setFilho_Esquerdo(nil);
+//                    }
+//                    
+//                    nil.setDuplo(true);
+                    situacao3(no, sucessor);
                 } else {
-                    situacao4(no, filhoDireito);
+                    situacao4(no, sucessor);
                 }
                 
             }
@@ -324,107 +385,250 @@ public class Arvore_RubroNegra {
     }
     
     private void situacao2(No removido, No sucessor){
-        if(removido.getPai().getFilho_Esquerdo()==removido){
-            if(sucessor.getPai().getFilho_Direito() == sucessor){
-                sucessor.getPai().setFilho_Direito(nil);
-            } else {
-                sucessor.getPai().setFilho_Esquerdo(nil);
-            }
-            
-            if(removido.getPai() == null){
-                noRaiz = sucessor;
-            }
-            
-            removido.getPai().setFilho_Esquerdo(sucessor);
-            removido.getFilho_Direito().setPai(sucessor);
-            removido.getFilho_Esquerdo().setPai(sucessor);
-            sucessor.setPai(removido.getPai());
-            sucessor.setFilho_Direito(removido.getFilho_Direito());
-            sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
-            
-            sucessor.setCor("black");
-        } else {
-            if(sucessor.getPai().getFilho_Esquerdo()== sucessor){
-                sucessor.getPai().setFilho_Esquerdo(nil);
-            } else {
-                sucessor.getPai().setFilho_Direito(nil);
-            }
-            
-            if(removido.getPai() == null){
-                noRaiz = sucessor;
-            }
-            
-            removido.getPai().setFilho_Direito(sucessor);
-            removido.getFilho_Esquerdo().setPai(sucessor);
-            removido.getFilho_Direito().setPai(sucessor);
-            sucessor.setPai(removido.getPai());
-            sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
-            sucessor.setFilho_Direito(removido.getFilho_Direito());
-            
+        if (removido == null) {
             sucessor.setCor("black");
         }
+        else {
+            if(removido.getPai().getFilho_Esquerdo()==removido){
+                if(sucessor.getPai().getFilho_Direito() == sucessor){
+                    sucessor.getPai().setFilho_Direito(nil);
+                } else {
+                    sucessor.getPai().setFilho_Esquerdo(nil);
+                }
+
+                if(removido.getPai() == null){
+                    noRaiz = sucessor;
+                }
+
+                removido.getPai().setFilho_Esquerdo(sucessor);
+                removido.getFilho_Direito().setPai(sucessor);
+                removido.getFilho_Esquerdo().setPai(sucessor);
+                sucessor.setPai(removido.getPai());
+                sucessor.setFilho_Direito(removido.getFilho_Direito());
+                sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
+
+            } else {
+                if(sucessor.getPai().getFilho_Esquerdo()== sucessor){
+                    sucessor.getPai().setFilho_Esquerdo(nil);
+                } else {
+                    sucessor.getPai().setFilho_Direito(nil);
+                }
+
+                if(removido.getPai() == null){
+                    noRaiz = sucessor;
+                }
+
+                removido.getPai().setFilho_Direito(sucessor);
+                removido.getFilho_Esquerdo().setPai(sucessor);
+                removido.getFilho_Direito().setPai(sucessor);
+                sucessor.setPai(removido.getPai());
+                sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
+                sucessor.setFilho_Direito(removido.getFilho_Direito());
+
+            }
+
+            sucessor.setCor("black");
+        }
+        
     }
     
     private void situacao3(No removido, No sucessor){
         //out.println("entrou na situação 3");
+        // o no ja entra com duplo na situacao 3
+               
+        //LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado        
+        if (sucessor.isDuplo() == false) {
+            removido.setChave(sucessor.getChave());
+            sucessor.setChave(0);
+            sucessor.setDuplo(true);
+        
+        } 
         
         No irmao;
-        No pai = removido.getPai();
+        No pai = sucessor.getPai();
         
-        if(pai.getFilho_Direito() == removido){
-            irmao = pai.getFilho_Esquerdo();
-        } else {
+        if (pai.getFilho_Esquerdo() == sucessor) {
             irmao = pai.getFilho_Direito();
+        } else {
+            irmao = pai.getFilho_Esquerdo();
         }
         
-        //caso 1
-        if(sucessor.getCor()=="black" && irmao.getCor()=="red" && pai.getCor()=="black"){
-            //situacao3_1(pai, irmao, sucessor);
+
+
+        if (irmao.getCor() == "red") {
+            // CASO 3.1
+            // Essencialmente, os nós filhos do irmão são NEGROS
+            // E o pai JAMAIS pode ser rubro, senão estaria desbalanceado
+            situacao3_1(sucessor);
+
+        } else { // mas se ele for negro
+            if (irmao.getFilho_Esquerdo().getCor() == "black") {
+                if (irmao.getFilho_Direito().getCor() == "black") {
+                    if (pai.getCor() == "black") {
+                        // CASO 3.2.a
+                        situacao3_2a(sucessor);
+                    } else {
+                        // CASO 3.2.b
+                        situacao3_2b(sucessor);
+                    }
+
+                } else {
+                    // CASO 3.4
+                    situacao3_4(sucessor);
+                }
+
+            } else {
+                if (irmao.getFilho_Direito().getCor() == "black") {
+                    // CASO 3.3
+                    situacao3_3(sucessor);
+                } else {
+                    // CASO 3.4
+                    situacao3_4(sucessor);
+                }
+            }
         }
-    }
-    
-    public void situacao3_1(){
         
     }
-    
-    public void situacao3_2a(){
+  
+    public void situacao3_1(No sucessor){
+        //LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
+        //LEMBRETE 2: para todos os casos nao terminais, sobe o duplo para o pai
         
+        // Rotacao Simples a Esquerda
+        // Pintar o irmao de negro
+        // Pintar pai de rubro
+        
+        No pai = sucessor.getPai();
+        No irmao;
+        
+        if (pai.getFilho_Esquerdo() == sucessor) {
+            irmao = pai.getFilho_Direito();
+            
+            // Rotacao simples a esquerda 
+            irmao.setPai(pai.getPai());
+            pai.setPai(irmao);
+            
+            if(irmao.getFilho_Esquerdo() != null) {
+                pai.setFilho_Direito(irmao.getFilho_Esquerdo());
+                irmao.getFilho_Esquerdo().setPai(pai);
+                irmao.setFilho_Esquerdo(pai);
+    
+            } else {
+                irmao.setFilho_Esquerdo(pai);
+            }
+           
+            
+        } else {
+            irmao = pai.getFilho_Esquerdo();
+            
+            // Rotacao simples a direita
+            irmao.setPai(pai.getPai());
+            pai.setPai(irmao);
+            
+            if(irmao.getFilho_Direito() != null) {
+                pai.setFilho_Esquerdo(irmao.getFilho_Direito());
+                irmao.getFilho_Direito().setPai(pai);
+                irmao.setFilho_Direito(pai);
+    
+            } else {
+                irmao.setFilho_Direito(pai);
+            }
+        }
+       
+        irmao.setCor("black");
+        pai.setCor("red");
+        
+        situacao3(null, sucessor);
+             
+    }
+    
+    public void situacao3_2a(No sucessor){
+        //LEMBRETE: se o duplo subir para o nó RAIZ, o duplo é absorvido
+        //LEMBRETE 2: para todos os casos nao terminais, sobe o duplo para o pai
+        No irmao;
+        No pai = sucessor.getPai();
+        
+        if (pai.getFilho_Esquerdo() == sucessor) {
+            irmao = pai.getFilho_Direito();
+        } else {
+            irmao = pai.getFilho_Esquerdo();
+        }
+        
+        irmao.setCor("red");
+        
+        // CASO TERMINAL
+        sucessor.setDuplo(false);
+        
+        if(pai.getPai() != null) {
+          pai.setDuplo(true);
+          situacao3(null, pai);
+           
+        }
+        
+
     }
     
     public void situacao3_2b(No sucessor){
-    }
-    
-    public void situacao3_3(){
+        // LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
+        // CASO TERMINAL: absorve duplo, setta pra false
         
     }
     
-    public void situacao3_4(){
+    public void situacao3_3(No sucessor){
+        //LEMBRETE 2: para todos os casos nao terminais, sobe o duplo para o pai
         
+    }
+    
+    public void situacao3_4(No sucessor){
+        //LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
+        // CASO TERMINAL: absorve duplo, setta pra false
         
     }
     
     private void situacao4(No removido, No sucessor){
         //out.println(sucessor.getChave() +" "+ sucessor.getCor());
-        if(removido.getPai().getFilho_Esquerdo()==removido){
-            if(sucessor.getPai().getFilho_Direito() == sucessor){
-                sucessor.getPai().setFilho_Direito(nil);
-            } else {
-                sucessor.getPai().setFilho_Esquerdo(nil);
-            }
-            
-            removido.getPai().setFilho_Esquerdo(sucessor);
-            removido.getFilho_Direito().setPai(sucessor);
-            removido.getFilho_Esquerdo().setPai(sucessor);
-            sucessor.setPai(removido.getPai());
-            sucessor.setFilho_Direito(removido.getFilho_Direito());
-            sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
-            
-           
+        if (removido == null) {
             sucessor.setCor("red");
             sucessor.setDuplo(true);
+        } else {
+            if(removido.getPai().getFilho_Esquerdo()==removido){
+                if(sucessor.getPai().getFilho_Direito() == sucessor){
+                    sucessor.getPai().setFilho_Direito(nil);
+                } else {
+                    sucessor.getPai().setFilho_Esquerdo(nil);
+                }
+
+                removido.getPai().setFilho_Esquerdo(sucessor);
+                removido.getFilho_Direito().setPai(sucessor);
+                removido.getFilho_Esquerdo().setPai(sucessor);
+                sucessor.setPai(removido.getPai());
+                sucessor.setFilho_Direito(removido.getFilho_Direito());
+                sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
+
+
+                sucessor.setCor("red");
+                sucessor.setDuplo(true);
+            } else {
+
+                if(sucessor.getPai().getFilho_Esquerdo() == sucessor){
+                    sucessor.getPai().setFilho_Esquerdo(nil);
+                } else {
+                    sucessor.getPai().setFilho_Direito(nil);
+                }
+
+                removido.getPai().setFilho_Direito(sucessor);
+                removido.getFilho_Esquerdo().setPai(sucessor);
+                removido.getFilho_Direito().setPai(sucessor);
+                sucessor.setPai(removido.getPai());
+                sucessor.setFilho_Direito(removido.getFilho_Direito());
+                sucessor.setFilho_Esquerdo(removido.getFilho_Esquerdo());
+
+
+                sucessor.setCor("red");
+                sucessor.setDuplo(true);
+            }        
         }
-        
-        situacao3(removido, sucessor);
+        situacao3(sucessor);
     }
 
     public static void emOrdem(No raiz) {

@@ -247,6 +247,7 @@ public class Arvore_RubroNegra {
                         } else { // removido é filho ESQUERDO
                             no.getPai().setFilho_Esquerdo(nil);
                         }
+                        nil.setDuplo(true);
                         nil.setPai(no.getPai());
                         situacao3(no, nil);
                     }
@@ -469,8 +470,12 @@ public class Arvore_RubroNegra {
         No irmao;
 
         if (pai.getFilho_Esquerdo() == sucessor) {
+            
             irmao = pai.getFilho_Direito();
-
+            
+            if(pai.getPai()==null){
+                noRaiz = irmao;
+            }
             // Rotacao simples a esquerda 
             irmao.setPai(pai.getPai());
             pai.setPai(irmao);
@@ -486,7 +491,10 @@ public class Arvore_RubroNegra {
 
         } else {
             irmao = pai.getFilho_Esquerdo();
-
+            
+            if(pai.getPai()==null){
+                noRaiz = irmao;
+            }
             // Rotacao simples a direita
             irmao.setPai(pai.getPai());
             pai.setPai(irmao);
@@ -504,6 +512,7 @@ public class Arvore_RubroNegra {
         irmao.setCor("black");
         pai.setCor("red");
 
+        
         situacao3(null, sucessor);
 
     }
@@ -536,17 +545,132 @@ public class Arvore_RubroNegra {
     public void situacao3_2b(No sucessor) {
         // LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
         // CASO TERMINAL: absorve duplo, setta pra false
+        No irmao;
+        No pai = sucessor.getPai();
+
+        if (pai.getFilho_Esquerdo() == sucessor) {
+            irmao = pai.getFilho_Direito();
+        } else {
+            irmao = pai.getFilho_Esquerdo();
+        }
+
+        irmao.setCor("red");
+        pai.setCor("black");
+        sucessor.setDuplo(false);
 
     }
 
     public void situacao3_3(No sucessor) {
-        //LEMBRETE 2: para todos os casos nao terminais, sobe o duplo para o pai
+        No irmao;
+        No pai = sucessor.getPai();
+
+        // Rotacao simples a direita no irmao
+        // Trocar as cores com o filho esquerdo
+        if (pai.getFilho_Esquerdo() == sucessor) {
+            irmao = pai.getFilho_Direito();
+
+            irmao.getPai().setFilho_Direito(irmao.getFilho_Esquerdo());
+            irmao.getFilho_Esquerdo().setPai(pai);
+            irmao.getFilho_Esquerdo().setFilho_Direito(irmao);
+            irmao.setPai(irmao.getFilho_Esquerdo());
+            irmao.setFilho_Esquerdo(nil);            
+            
+        } else {
+            irmao = pai.getFilho_Esquerdo();
+
+            irmao.getPai().setFilho_Esquerdo(irmao.getFilho_Direito());
+            irmao.getFilho_Direito().setPai(pai);
+            irmao.getFilho_Direito().setFilho_Esquerdo(irmao);
+            irmao.setPai(irmao.getFilho_Direito());
+            irmao.setFilho_Direito(nil);
+        }
+        
+        
+        String cor = irmao.getCor(); //black
+        irmao.setCor(irmao.getPai().getCor());
+        irmao.getPai().setCor(cor); 
+        
+
+        situacao3(null, sucessor);
 
     }
 
     public void situacao3_4(No sucessor) {
         //LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
         // CASO TERMINAL: absorve duplo, setta pra false
+
+        No irmao;
+        No pai = sucessor.getPai();
+
+        // Rotacao simples a esquerda no pai
+        // Pinte o pai de negro
+        // Cor do irmao igual a cor antiga de pai
+        String corReservadaDoPai = pai.getCor();
+        // Pinter o sobrinho direito de negro
+        if (sucessor == pai.getFilho_Esquerdo()) {
+            // isso significa que irmao eh filho direito
+            irmao = pai.getFilho_Direito();
+
+            // rotacao simples a esquerda no pai
+            if(pai.getPai()==null){
+                noRaiz = irmao;
+            }else{
+                if(pai.getPai().getFilho_Direito() == pai){
+                    pai.getPai().setFilho_Direito(irmao);
+                }else{
+                    pai.getPai().setFilho_Esquerdo(irmao);
+                }
+            }
+            
+            irmao.setPai(pai.getPai());
+            
+            if(irmao.getFilho_Esquerdo() != nil){
+                irmao.getFilho_Esquerdo().setPai(pai);
+                pai.setFilho_Direito(irmao.getFilho_Esquerdo());
+               
+            }else{
+                pai.setFilho_Direito(nil);
+            }
+            irmao.setFilho_Esquerdo(pai);
+            pai.setPai(irmao);
+            
+            // setta a cor do filho direito anterior logo agora, antes de trocar referencia
+            irmao.getFilho_Direito().setCor("black");
+
+        } else {
+
+            irmao = pai.getFilho_Esquerdo();
+
+            // rotacao simples a esquerda no pai
+            if(pai.getPai()==null){
+                noRaiz = irmao;
+            }else{
+                if(pai.getPai().getFilho_Direito() == pai){
+                    pai.getPai().setFilho_Direito(irmao);
+                }else{
+                    pai.getPai().setFilho_Esquerdo(irmao);
+                }
+            }
+            
+            irmao.setPai(pai.getPai());
+            
+            if(irmao.getFilho_Direito()!= null){
+                irmao.getFilho_Direito().setPai(pai);
+                pai.setFilho_Esquerdo(irmao.getFilho_Direito());
+                irmao.setFilho_Direito(pai);
+            }else{
+                irmao.setFilho_Direito(pai);
+            }
+            pai.setPai(irmao);
+            // setta a cor do filho direito anterior logo agora, antes de trocar referencia
+            irmao.getFilho_Esquerdo().setCor("black");
+
+        }
+
+        pai.setCor("black");
+        irmao.setCor(corReservadaDoPai);
+
+        sucessor.setDuplo(false);
 
     }
 
@@ -608,46 +732,118 @@ public class Arvore_RubroNegra {
     public static void main(String[] args) {
         Arvore_RubroNegra aRN = new Arvore_RubroNegra();
 
-        // teste Rubro-Rubro
-        /*aRN.inserir(aRN.getRaiz(), 15);
-        aRN.inserir(aRN.getRaiz(), 11);
-        aRN.inserir(aRN.getRaiz(), 20);
-        aRN.inserir(aRN.getRaiz(), 10);
-        aRN.inserir(aRN.getRaiz(), 13);
-        aRN.inserir(aRN.getRaiz(), 12);
-        aRN.inserir(aRN.getRaiz(), 9);
-        aRN.inserir(aRN.getRaiz(), 17);
-        aRN.inserir(aRN.getRaiz(), 18);
-        aRN.inserir(aRN.getRaiz(), 19);
-        aRN.remover(aRN.getRaiz(), 18);*/
-        
-        //teste Negro-Rubro
-        /*aRN.inserir(aRN.getRaiz(), 15);
-        aRN.inserir(aRN.getRaiz(), 11);
-        aRN.inserir(aRN.getRaiz(), 20);
-        aRN.inserir(aRN.getRaiz(), 10);
-        aRN.inserir(aRN.getRaiz(), 12);
-        aRN.inserir(aRN.getRaiz(), 9);
-        aRN.inserir(aRN.getRaiz(), 25);
-        aRN.remover(aRN.getRaiz(), 20);*/
-        
-        //teste Negro-Negro
-        
-        
-        //teste Rubro-Negro
-        aRN.inserir(aRN.getRaiz(), 15);
-        aRN.inserir(aRN.getRaiz(), 11);
-        aRN.inserir(aRN.getRaiz(), 20);
-        aRN.inserir(aRN.getRaiz(), 10);
-        aRN.inserir(aRN.getRaiz(), 12);
-        aRN.inserir(aRN.getRaiz(), 9);
-        aRN.inserir(aRN.getRaiz(), 18);
-        aRN.inserir(aRN.getRaiz(), 25);
-        aRN.inserir(aRN.getRaiz(), 28);
+        // TESTES DE REMOÇÃO 
+        //teste 18
+        /*
         aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.remover(aRN.getRaiz(), 40);
+         */
+        //teste 19
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.remover(aRN.getRaiz(), 50);
+        aRN.remover(aRN.getRaiz(), 10);  */ 
+        
+        //teste extra
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
         aRN.inserir(aRN.getRaiz(), 35);
-        aRN.remover(aRN.getRaiz(), 28);
-
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 35);*/
+                
+        //teste 20
+        
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.remover(aRN.getRaiz(), 50);
+        aRN.remover(aRN.getRaiz(), 40);  */
+         
+        
+        //teste 21
+        /*
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 35);
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 35);
+         */
+        
+        
+        //teste 22
+        /*
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 35);
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 50);
+         */
+                 
+        //teste 23
+        
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 35);
+        aRN.inserir(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 60);
+        aRN.remover(aRN.getRaiz(), 10);*/        
+        
+         
+        //teste 24
+        /*
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 25);
+        aRN.inserir(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 40);*/
+        
+        // caso 1 espelhado
+         
+        //teste 26
+        
+        /*aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 25);
+        aRN.inserir(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 40);
+        aRN.remover(aRN.getRaiz(), 5);*/
+        
+        
+        //teste 28
+        
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 20);
+        aRN.inserir(aRN.getRaiz(), 50);
+        aRN.inserir(aRN.getRaiz(), 70);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 80);
+        aRN.remover(aRN.getRaiz(), 80);
+        aRN.remover(aRN.getRaiz(), 20);
+        aRN.remover(aRN.getRaiz(), 70);
+        // caso 3 e 4
+         
         out.println(aRN.getRaiz());
         emOrdem(aRN.getRaiz());
 

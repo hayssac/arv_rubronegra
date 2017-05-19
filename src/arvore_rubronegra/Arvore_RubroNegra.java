@@ -441,7 +441,7 @@ public class Arvore_RubroNegra {
                         situacao3_2b(sucessor);
                     }
 
-                } else if(irmao.getFilho_Direito().getCor() == "red" && irmao.getFilho_Esquerdo().getCor()=="black" && pai.getCor()=="black"){
+                } else if (irmao.getFilho_Direito().getCor() == "red" && irmao.getFilho_Esquerdo().getCor() == "black" && pai.getCor() == "black") {
                     situacao3_3(sucessor);
                 } else {
                     // CASO 3.4
@@ -449,9 +449,14 @@ public class Arvore_RubroNegra {
                 }
 
             } else {
-                if (irmao.getFilho_Direito().getCor() == "black" && irmao.getFilho_Esquerdo().getCor()=="red" && pai.getCor()=="black") {
-                    // CASO 3.3
-                    situacao3_4(false, sucessor);
+                if (irmao.getFilho_Direito().getCor() == "black" && irmao.getFilho_Esquerdo().getCor() == "red" && pai.getCor() == "black") {
+
+                    if (pai.getFilho_Esquerdo() == sucessor) {
+                        situacao3_3(sucessor);
+                    } else {
+                        // CASO 3.3
+                        situacao3_4(false, sucessor);
+                    }
                 } else {
                     // CASO 3.4
                     situacao3_3(sucessor);
@@ -611,48 +616,82 @@ public class Arvore_RubroNegra {
     public void situacao3_4(boolean veiode3_3, No sucessor) {
         //LEMBRETE: settar o duplo para "false" de cada nó que vai ser alterado
         // CASO TERMINAL: absorve duplo, setta pra false
-        No irmao = null;
+
+        // Rotacao simples a esquerda no pai
+        // Pinte o pai de negro
+        // Cor do irmao igual a cor antiga de pai
+        // Pinter o sobrinho direito de negro
+        No irmao;
         No pai = sucessor.getPai();
         String corReservadaDoPai = pai.getCor();
 
         if (veiode3_3) {
+            if (pai.getFilho_Direito() == sucessor) {
 
-            irmao = pai.getFilho_Esquerdo();
+                irmao = pai.getFilho_Esquerdo();
 
-            // rotacao simples a esquerda no pai
-            if (pai.getPai() == null) {
-                noRaiz = irmao;
-            } else {
-                if (pai.getPai().getFilho_Direito() == pai) {
-                    pai.getPai().setFilho_Direito(irmao);
+                // rotacao simples a esquerda no pai
+                if (pai.getPai() == null) {
+                    noRaiz = irmao;
                 } else {
-                    pai.getPai().setFilho_Esquerdo(irmao);
+                    if (pai.getPai().getFilho_Direito() == pai) {
+                        pai.getPai().setFilho_Direito(irmao);
+                    } else {
+                        pai.getPai().setFilho_Esquerdo(irmao);
+                    }
                 }
+
+                irmao.setPai(pai.getPai());
+
+                irmao.setFilho_Direito(pai);
+
+                pai.setPai(irmao);
+                // setta a cor do filho direito anterior logo agora, antes de trocar referencia
+                irmao.getFilho_Esquerdo().setCor("black");
+                pai.setFilho_Esquerdo(nil);
+
+                pai.setCor("black");
+                irmao.setCor(corReservadaDoPai);
+                irmao.getFilho_Esquerdo().setCor("black");
+
+                sucessor.setDuplo(false);
+                veiode3_3 = false;
+
+            } else {
+
+                irmao = pai.getFilho_Direito();
+
+                // rotacao simples a esquerda no pai
+                if (pai.getPai() == null) {
+                    noRaiz = irmao;
+                } else {
+                    if (pai.getPai().getFilho_Esquerdo() == pai) {
+                        pai.getPai().setFilho_Esquerdo(irmao);
+                    } else {
+                        pai.getPai().setFilho_Direito(irmao);
+                    }
+                }
+
+                irmao.setPai(pai.getPai());
+
+                irmao.setFilho_Esquerdo(pai);
+
+                pai.setPai(irmao);
+                // setta a cor do filho direito anterior logo agora, antes de trocar referencia
+                irmao.getFilho_Direito().setCor("black");
+                pai.setFilho_Direito(nil);
+
+                pai.setCor("black");
+                irmao.setCor(corReservadaDoPai);
+                irmao.getFilho_Esquerdo().setCor("black");
+                //        pai.setFilho_Esquerdo(nil);
+
+                sucessor.setDuplo(false);
+                veiode3_3 = false;
+
             }
 
-            irmao.setPai(pai.getPai());
-
-            irmao.setFilho_Direito(pai);
-
-            pai.setPai(irmao);
-            // setta a cor do filho direito anterior logo agora, antes de trocar referencia
-            irmao.getFilho_Esquerdo().setCor("black");
-            pai.setFilho_Esquerdo(nil);
-
-            pai.setCor("black");
-            irmao.setCor(corReservadaDoPai);
-            irmao.getFilho_Esquerdo().setCor("black");
-//        pai.setFilho_Esquerdo(nil);
-
-            sucessor.setDuplo(false);
-            veiode3_3 = false;
-
         } else {
-
-            // Rotacao simples a esquerda no pai
-            // Pinte o pai de negro
-            // Cor do irmao igual a cor antiga de pai
-            // Pinter o sobrinho direito de negro
             if (sucessor == pai.getFilho_Esquerdo()) {
                 // isso significa que irmao eh filho direito
                 irmao = pai.getFilho_Direito();
@@ -691,7 +730,7 @@ public class Arvore_RubroNegra {
                 if (pai.getPai() == null) {
                     noRaiz = irmao;
                 } else {
-                    if (pai.getPai().getFilho_Esquerdo()== pai) {
+                    if (pai.getPai().getFilho_Esquerdo() == pai) {
                         pai.getPai().setFilho_Esquerdo(irmao);
                     } else {
                         pai.getPai().setFilho_Direito(irmao);
@@ -700,7 +739,7 @@ public class Arvore_RubroNegra {
 
                 irmao.setPai(pai.getPai());
 
-                if (irmao.getFilho_Direito()!= nil) {
+                if (irmao.getFilho_Direito() != nil) {
                     irmao.getFilho_Direito().setPai(pai);
                     pai.setFilho_Esquerdo(irmao.getFilho_Direito());
 
@@ -812,7 +851,6 @@ public class Arvore_RubroNegra {
 //        aRN.inserir(aRN.getRaiz(), 50);
 //        aRN.remover(aRN.getRaiz(), 50);
 //        aRN.remover(aRN.getRaiz(), 40);  
-        //teste 21
         //teste 22
 //        aRN.inserir(aRN.getRaiz(), 30);
 //        aRN.inserir(aRN.getRaiz(), 10);
@@ -832,15 +870,15 @@ public class Arvore_RubroNegra {
 //        aRN.remover(aRN.getRaiz(), 60);
 //        aRN.remover(aRN.getRaiz(), 10);
         //teste 24
-//        aRN.inserir(aRN.getRaiz(), 30);
-//        aRN.inserir(aRN.getRaiz(), 10);
-//        aRN.inserir(aRN.getRaiz(), 40);
-//        aRN.inserir(aRN.getRaiz(), 5);
-//        aRN.inserir(aRN.getRaiz(), 25);
-//        aRN.inserir(aRN.getRaiz(), 1);
-//        aRN.remover(aRN.getRaiz(), 1);
-//        aRN.remover(aRN.getRaiz(), 40);
-        // caso 1 espelhado
+        aRN.inserir(aRN.getRaiz(), 30);
+        aRN.inserir(aRN.getRaiz(), 10);
+        aRN.inserir(aRN.getRaiz(), 40);
+        aRN.inserir(aRN.getRaiz(), 5);
+        aRN.inserir(aRN.getRaiz(), 25);
+        aRN.inserir(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 1);
+        aRN.remover(aRN.getRaiz(), 40);
+//   caso 1 espelhado
         //teste 26
 //        aRN.inserir(aRN.getRaiz(), 30);
 //        aRN.inserir(aRN.getRaiz(), 10);
@@ -851,6 +889,7 @@ public class Arvore_RubroNegra {
 //        aRN.remover(aRN.getRaiz(), 1);
 //        aRN.remover(aRN.getRaiz(), 40);
 //        aRN.remover(aRN.getRaiz(), 5);
+
         //teste 28
 //        aRN.inserir(aRN.getRaiz(), 30);
 //        aRN.inserir(aRN.getRaiz(), 20);
@@ -862,20 +901,19 @@ public class Arvore_RubroNegra {
 //        aRN.remover(aRN.getRaiz(), 20);
 //        aRN.remover(aRN.getRaiz(), 70);
         // caso 3 e 4
-        aRN.inserir(aRN.getRaiz(), 15);
-        aRN.inserir(aRN.getRaiz(), 11);
-        aRN.inserir(aRN.getRaiz(), 20);
-        aRN.inserir(aRN.getRaiz(), 10);
-        aRN.inserir(aRN.getRaiz(), 12);
-        aRN.inserir(aRN.getRaiz(), 9);
-        aRN.inserir(aRN.getRaiz(), 18);
-        aRN.inserir(aRN.getRaiz(), 25);
-        aRN.inserir(aRN.getRaiz(), 28);
-        aRN.inserir(aRN.getRaiz(), 30);
-        aRN.inserir(aRN.getRaiz(), 35);
-        aRN.remover(aRN.getRaiz(), 20);
-        aRN.remover(aRN.getRaiz(), 11);
-
+//        aRN.inserir(aRN.getRaiz(), 15);
+//        aRN.inserir(aRN.getRaiz(), 11);
+//        aRN.inserir(aRN.getRaiz(), 20);
+//        aRN.inserir(aRN.getRaiz(), 10);
+//        aRN.inserir(aRN.getRaiz(), 12);
+//        aRN.inserir(aRN.getRaiz(), 9);
+//        aRN.inserir(aRN.getRaiz(), 18);
+//        aRN.inserir(aRN.getRaiz(), 25);
+//        aRN.inserir(aRN.getRaiz(), 28);
+//        aRN.inserir(aRN.getRaiz(), 30);
+//        aRN.inserir(aRN.getRaiz(), 35);
+//        aRN.remover(aRN.getRaiz(), 20);
+//        aRN.remover(aRN.getRaiz(), 11);
         out.println(aRN.getRaiz());
         emOrdem(aRN.getRaiz());
 
